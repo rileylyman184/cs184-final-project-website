@@ -1,0 +1,261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>
+    body {
+        padding: 100px;
+        width: 1000px;
+        margin: auto;
+        text-align: left;
+        font-weight: 300;
+        font-family: 'Open Sans', sans-serif;
+        color: #121212;
+    }
+    h1, h2, h3, h4 {
+        font-family: 'Source Sans Pro', sans-serif;
+    }
+</style>
+<title> Angela Chen, Peter Generao, Riley Lyman  |  CS 184</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
+</head>
+<body>
+
+  <h1 style='margin-bottom: 0.08in;font-family: "Liberation Serif", serif;font-style: normal;font-weight: normal;text-decoration: none;'><span style="background: transparent; font-family: Arial, Helvetica, sans-serif;">Real-Time Simulation of Interactions Between Fluid and Rigid/Semi-Rigid Solids</span></h1>
+  <h3 style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Angela Chen,&nbsp;Peter Generao,&nbsp;<span style="background: transparent;">Riley Lyman</span></span></span></h3>
+  <hr>
+  <p style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><br></span></p>
+  <h2 style="margin-top: 0.25in; margin-bottom: 0.17in; font-style: normal; font-weight: normal; line-height: 138%; text-decoration: none; text-align: center;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Summary</span></span></h2>
+  <p style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Our primary interest lies in real-time modeling weather affecting landscapes and scenes that would be commonly encounter in video games. In order to achieve this, we plan on implementing a real-time system capable of rendering both fluids and its interactions with rigid/semi-rigid solids. We are primarily interested in creating realistic, dynamic scenes involving liquids and gases (such as smoke, fog, or moving bodies of air) and their effects on solid materials such as cloth, plastics, paper, and wood.</span></span></p>
+  <p style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><br></span></p>
+  <h2 style="margin-top: 0.25in; margin-bottom: 0.17in; font-style: normal; font-weight: normal; line-height: 138%; text-decoration: none; text-align: center;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Problem Description</span></span></h2>
+  <p style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Simulating large bodies of various fluids is normally a very computationally intensive process, and this makes it practically infeasible to accurately model them in real-time applications such as video games and interactive scenes; however, many real-world scenes involve fluids in some form. Some examples of scenes involving fluids are:</span></span></p>
+  <ul>
+      <li>
+          <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Leaves, trees, and grass in a landscape moving with (and changing) a current of wind.</span></span></p>
+      </li>
+      <li>
+          <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Cloth-materials being affected by drag.</span></span></p>
+      </li>
+      <li>
+          <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Fog creeping over a landscape.</span></span></p>
+      </li>
+      <li>
+          <p style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Pebbles being pushed along a riverbed by a current of water.</span></span></p>
+      </li>
+  </ul>
+  <p style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Thus, the challenge is balancing the construction of a scene where these kinds of elements interact with each other convincingly while maintaining good performance (e.g. rendering the scene at 60 FPS).</span></span></p>
+  <p style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Our current proposed solution to approximate the fluid-component of this problem is based on an approach of approximating the fluid by simplifying the geometry to a vector field stored in a sparse data structure. From there, we will simulate the fluid/evolve this data structure using discrete methods. Given this simplification of the bodies of fluid, we can also model its interactions with solid objects.</span></span></p>
+  <p><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><br></span></p>
+  <h2 style="margin-top: 0.25in; margin-bottom: 0.17in; font-style: normal; font-weight: normal; line-height: 138%; text-decoration: none; text-align: center;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Goals and Deliverables</span></span></h2>
+  <p style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Our primary goals involve rendering the following scenes in real-time with an interactive camera:</span></span></p>
+  <ul>
+      <li>
+          <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">A scene where leaves are being carried by a moving body of rotating wind (not a static vector field, but a dynamically evolving fluid).</span></span></p>
+      </li>
+      <li>
+          <p style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">A scene where trees and grass are swaying in the wind (a small amount of grass).</span></span></p>
+      </li>
+  </ul>
+  <p style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Additionally we will be demonstrating the modeling aspect (but not necessarily rendering) via showing a vector field of a given fluid which evolves over time. This is primarily because modeling fog and water will involve more complex volume rendering processes which are not necessarily in scope of the modeling aspect. At the very least, we will be able to model &ldquo;invisible&rdquo; fluids and &ldquo;plastic-like&rdquo; fluids with diffuse shaders. Thus we will be also displaying the following scenes:</span></span></p>
+  <ul>
+      <li>
+          <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">A scene where fog is creeping over multiple ledges (the fog will either be completely opaque or invisible) to demonstrate surface evolution and the effects of objects inside of the fog.</span></span></p>
+      </li>
+      <li>
+          <p style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">A scene with &nbsp;water passing through grass (the water will either be completely opaque or invisible) to demonstrate surface evolution and the effects of objects inside of the water.</span></span></p>
+      </li>
+  </ul>
+  <p style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">In order to measure the performance of our system, we will be running our simulation on our individual machines and recording the FPS (for it to qualify as real-time). We will also test scalability (how many objects we can render in a scene before it becomes too slow) and a qualitative comparison to real world phenomena (we will try to create an accurate representation of a real life scene).</span></span></p>
+  <p style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">In addition, we will try finding other real-time simulation software of fluids interacting with cloth, and do a qualitative/quantitative comparison between them.</span></span></p>
+  <p style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Some additional scenes we are hoping to deliver are:</span></span></p>
+  <ul>
+      <li>
+          <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">A scene where realistic fog (with possible volumetric scattering effects) is creeping over multiple ledges.</span></span></p>
+      </li>
+      <li>
+          <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">A scene with realistic water passing through grass.</span></span></p>
+      </li>
+      <li>
+          <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">A large scale field of grass and/or copse of trees being affected by wind.</span></span></p>
+      </li>
+      <li>
+          <p style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">A thunderstorm affecting a &nbsp;forest (rain particle effects).</span></span></p>
+      </li>
+  </ul>
+  <p style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">There are many small edge cases/optimizations we can implement with regards to our problem since it has such a wide scope, so we are focusing on implementing the baseline scenes we discussed earlier. Some examples of these optimizations involve:</span></span></p>
+  <ul>
+      <li>
+          <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Exploiting the regularity of the scenes we are trying to render for rain and grass.</span></span></p>
+      </li>
+      <li>
+          <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Exploiting procedural generation for generation of these fluids (e.g. creating a cloud of fog or boundary conditions for wind).</span></span></p>
+      </li>
+      <li>
+          <p style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Downsampling areas of our scene which are farther away.</span></span></p>
+      </li>
+  </ul>
+  <p><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><br></span></p>
+  <h2 style="margin-top: 0.25in; margin-bottom: 0.17in; font-style: normal; font-weight: normal; line-height: 138%; text-decoration: none; text-align: center;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Schedule</span></span></h2>
+  <p style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">There are two main portions of the project to be implemented, which will be developed in parallel. The first is the physics-based modeling approximation of fluids within the scene and the second is the actual rendering of the scene (Roughly Each Task Per Week).</span></span></p>
+  <ul>
+      <li>
+          <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Modeling</span></span></p>
+          <ul>
+              <li>
+                  <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Fluid Mechanics</span></span></p>
+              </li>
+              <li>
+                  <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Interactions between Solids and Fluids</span></span></p>
+              </li>
+              <li>
+                  <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Semi-Rigid Deformations</span></span></p>
+                  <ul>
+                      <li>
+                          <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Rigging/Joint Updates Based on Forces from Vector Field</span></span></p>
+                      </li>
+                  </ul>
+              </li>
+              <li>
+                  <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Interactions between Semi-Rigid Solids and Fluids</span></span></p>
+              </li>
+          </ul>
+      </li>
+      <li>
+          <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Rendering</span></span></p>
+          <ul>
+              <li>
+                  <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Mesh Loading and Rendering with PBR Shader (Already Done)</span></span></p>
+              </li>
+              <li>
+                  <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Camera System (Already Done)</span></span></p>
+              </li>
+              <li>
+                  <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Scene Editing and Storage in JSON Format</span></span></p>
+              </li>
+              <li>
+                  <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Skeletal Animation System</span></span></p>
+                  <ul>
+                      <li>
+                          <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Render Meshes Based on Joint Orientation/Positions</span></span></p>
+                      </li>
+                  </ul>
+              </li>
+              <li>
+                  <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Rendering the Vector Field (Arrows or lines based on point-forces)</span></span></p>
+              </li>
+          </ul>
+      </li>
+      <li>
+          <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Stretch Goals</span></span></p>
+          <ul>
+              <li>
+                  <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Cloth-like 2D Simulation and Interactions with Fluids</span></span></p>
+              </li>
+              <li>
+                  <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Formal Volume Rendering of Visible Fluids</span></span></p>
+              </li>
+              <li>
+                  <p style="margin-bottom: 0.17in;line-height: 138%;font-style: normal;font-weight: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Large Scenes and Optimizations</span></span></p>
+              </li>
+          </ul>
+      </li>
+  </ul>
+  <p><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><br></span></p>
+  <h2 style="margin-bottom: 0.17in; line-height: 138%; font-style: normal; font-weight: normal; background: transparent; text-decoration: none; text-align: center;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="background: transparent;">Resources</span></span></h2>
+  <ul>
+      <li>
+          <p style="margin-bottom: 0in;line-height: 138%;background: transparent;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="text-decoration: none;"><span style="font-style: normal;"><strong><span style="background: transparent;">Primary Source for Fluid Modeling:&nbsp;</span></strong></span></span><a href="http://developer.download.nvidia.com/books/gpu_gems_3/samples/gems3_ch30.pdf"><span style="text-decoration: none;"><span style="font-style: normal;"><u><span style="font-weight: normal;"><span style="background: transparent;">http://developer.download.nvidia.com/books/gpu_gems_3/samples/gems3_ch30.pdf</span></span></u></span></span></a><span style="text-decoration: none;"><span style="font-style: normal;"><span style="font-weight: normal;"><span style="background: transparent;">&nbsp;</span></span></span></span></span></p>
+      </li>
+      <li>
+          <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><strong><span style="background: transparent;">References for Skeleton Based Structures Interacting with Fluids:</span></strong></span></p>
+          <ul>
+              <li>
+                  <p style="margin-bottom: 0in;line-height: 138%;font-style: normal;background: transparent;text-decoration: none;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><strong><span style="background: transparent;">Tree Branches Interacting with the Wind:</span></strong></span></p>
+                  <ul>
+                      <li>
+                          <p style="margin-bottom: 0in;line-height: 138%;background: transparent;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><a href="https://developer.nvidia.com/gpugems/gpugems3/part-i-geometry/chapter-6-gpu-generated-procedural-wind-animations-trees"><span style="text-decoration: none;"><span style="font-style: normal;"><u><span style="font-weight: normal;"><span style="background: transparent;">https://developer.nvidia.com/gpugems/gpugems3/part-i-geometry/chapter-6-gpu-generated-procedural-wind-animations-trees</span></span></u></span></span></a><span style="text-decoration: none;"><span style="font-style: normal;"><span style="font-weight: normal;"><span style="background: transparent;">&nbsp;(Consulting on effects of trees with wind)</span></span></span></span></span></p>
+                      </li>
+                      <li>
+                          <p style="margin-bottom: 0in;line-height: 138%;background: transparent;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><a href="https://pdfs.semanticscholar.org/268e/9b86f0c3e640b9a87f4f0c3de9a1260a0b94.pdf"><span style="text-decoration: none;"><span style="font-style: normal;"><u><span style="font-weight: normal;"><span style="background: transparent;">https://pdfs.semanticscholar.org/268e/9b86f0c3e640b9a87f4f0c3de9a1260a0b94.pdf</span></span></u></span></span></a><span style="text-decoration: none;"><span style="font-style: normal;"><span style="font-weight: normal;"><span style="background: transparent;">&nbsp;(Trees and how to model them via a skeleton + Interactions with wind)</span></span></span></span></span></p>
+                      </li>
+                      <li>
+                          <p style="margin-bottom: 0in;line-height: 138%;background: transparent;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><a href="https://www.hindawi.com/journals/ijcgt/2013/674848/"><span style="text-decoration: none;"><span style="font-style: normal;"><u><span style="font-weight: normal;"><span style="background: transparent;">https://www.hindawi.com/journals/ijcgt/2013/674848/</span></span></u></span></span></a><span style="text-decoration: none;"><span style="font-style: normal;"><span style="font-weight: normal;"><span style="background: transparent;">&nbsp;(Plants and how to construct them via a skeleton)</span></span></span></span></span></p>
+                      </li>
+                  </ul>
+              </li>
+              <li>
+                  <p style="margin-bottom: 0in;line-height: 138%;background: transparent;"><span style="font-family: 
+          Arial, Helvetica, sans-serif;"><span style="text-decoration: none;"><span style="font-style: normal;"><strong><span style="background: transparent;">Detached Leaves Interacting with the Wind:&nbsp;</span></strong></span></span><a href="https://pdfs.semanticscholar.org/2e4a/ef5e19df64164f7899fa864cf49060af7031.pdf"><span style="text-decoration: none;"><span style="font-style: normal;"><u><span style="font-weight: normal;"><span style="background: transparent;">https://pdfs.semanticscholar.org/2e4a/ef5e19df64164f7899fa864cf49060af7031.pdf</span></span></u></span></span></a></span></p>
+              </li>
+          </ul>
+      </li>
+  </ul>
+  <p style="margin-bottom: 0in;line-height: 100%;"><br></p>
+
+</body>
+</html>
+
+
+
+
